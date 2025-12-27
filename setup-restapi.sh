@@ -26,8 +26,8 @@ runCurlPost () {
   CSRF=$(echo "$header" | grep -iE '^Set-Cookie: csrf=' | sed 's/.*csrf=\([^;]*\).*/\1/')
 }
 
-echo "configuring rest api plugin"
+echo "--- configuring rest api plugin"
 runLogin
 runCurlGet "http://localhost:9090/plugins/restapi/rest-api.jsp"
 runCurlPost "http://localhost:9090/plugins/restapi/rest-api.jsp?save" "enabled=true&authtype=secret&secret=${restApiSecret}&customAuthFilterClassName=&allowedIPs=&loggingEnabled=false"
-echo "rest api plugin configured"
+echo "--- rest api plugin configured"
