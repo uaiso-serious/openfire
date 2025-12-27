@@ -32,6 +32,7 @@ You can configure the Openfire container using the following environment variabl
 - `FQDN`: Fully Qualified Domain Name (default: `localhost`)
 - `ADMIN_EMAIL`: Admin email address (default: `admin%40example.com`)
 - `ADMIN_PASSWORD`: Admin password (default: `admin`)
+- `REST_API_SECRET`: Secret for REST API plugin (default: `myrestapisecret`)
 - `DB_TYPE`: Database type (`embedded`, `postgres`, `mysql`, `oracle`, `mssql`; default: `embedded`)
 - `DB_SERVER_URL`: JDBC connection string (Postgres only, default: `jdbc:postgresql://localhost:5432/openfire`)
 - `DB_USERNAME`: Database username (Postgres only, default: `postgres`)
@@ -47,6 +48,7 @@ docker run -e DOMAIN=example.com \
            -e FQDN=chat.example.com \
            -e ADMIN_EMAIL=admin%40example.com \
            -e ADMIN_PASSWORD=supersecret \
+           -e REST_API_SECRET=superdupersecret \
            -e DB_TYPE=postgres \
            -e DB_SERVER_URL="jdbc:postgresql://dbhost:5432/openfire" \
            -e DB_USERNAME=postgres \

@@ -82,5 +82,19 @@ fi
 
 /opt/setup.sh &
 
-exec start-stop-daemon --start --chuid openfire:openfire \
-  --exec "${OPENFIRE_HOME}/bin/openfire.sh" -- ${EXTRA_ARGS}
+LOGFILE=$(mktemp)
+start-stop-daemon --start --chuid openfire:openfire \
+ --exec "${OPENFIRE_HOME}/bin/openfire.sh" -- ${EXTRA_ARGS} > "$LOGFILE" 2>&1 &
+
+OPENFIRE_PID=$!
+
+echo "Waiting plugins..."
+while ! grep -q "Finished processing all plugins." "$LOGFILE"; do
+ sleep 1
+done
+
+echo "Plugins loaded."
+
+/opt/setup-restapi.sh
+
+wait $OPENFIRE_PID

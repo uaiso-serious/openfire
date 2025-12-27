@@ -85,16 +85,18 @@ runSetup () {
   restAPIPlugin
 }
 
+echo "Waiting server..."
+
 while true; do
   HTTPCODE=$(curl -o /dev/null -I -s -w "%{http_code}\n" http://localhost:9090/setup/index.jsp)
   if [ "$HTTPCODE" = "200" ]; then
     echo "setup mode"
     runSetup
+    echo "done setup"
     break
   elif [ "$HTTPCODE" = "302" ]; then
     echo "running mode"
     break
   fi
-  echo "Waiting server..."
   sleep 1
 done
