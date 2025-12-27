@@ -12,7 +12,7 @@ RUN mkdir /data && \
     chown -R openfire:openfire /data && \
     chmod +x /opt/openfire/bin/openfire.sh
 
-ADD ["entrypoint.sh", "setup.sh", "setup-restapi.sh", "/opt/"]
+ADD ["entrypoint.sh", "setup.sh", "setup-restapi.sh", "readiness.sh", "/opt/"]
 
 USER openfire
 
