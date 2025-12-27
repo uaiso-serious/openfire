@@ -29,9 +29,15 @@ case "$dbtype" in
     ;;
 esac
 
-restAPIPlugin () {
+plugins () {
   if [ ! -f /data/plugins/restAPI.jar ]; then
     cp /tmp/plugins/restAPI.jar /data/plugins
+  fi
+  if [ ! -f /data/plugins/subscription.jar ]; then
+    cp /tmp/plugins/subscription.jar /data/plugins
+  fi
+  if [ ! -f /data/plugins/xmppweb.jar ]; then
+    cp /tmp/plugins/xmppweb.jar /data/plugins
   fi
 }
 
@@ -82,7 +88,7 @@ runSetup () {
 
   runCurlGet "http://localhost:9090/setup/setup-finished.jsp"
 
-  restAPIPlugin
+  plugins
 }
 
 echo "--- Waiting server..."

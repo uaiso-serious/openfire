@@ -4,7 +4,7 @@ RUN adduser --disabled-password --quiet --system --home /opt/openfire --gecos "O
 
 ADD ["openfire.tar.gz", "/opt/"]
 
-ADD ["https://github.com/igniterealtime/openfire-restAPI-plugin/releases/download/v1.12.0/restAPI.jar", "/tmp/plugins/restAPI.jar"]
+ADD ["https://github.com/igniterealtime/openfire-restAPI-plugin/releases/download/v1.12.0/restAPI.jar", "https://github.com/igniterealtime/openfire-subscription-plugin/releases/download/v1.4.3/subscription.jar", "https://github.com/igniterealtime/openfire-xmppweb-plugin/releases/download/v0.10.6.1/xmppweb.jar", "/tmp/plugins/"]
 
 RUN mkdir /data && \
     chown -R openfire:openfire /opt/openfire && \
