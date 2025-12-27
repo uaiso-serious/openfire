@@ -6,8 +6,10 @@ ADD ["openfire.tar.gz", "entrypoint.sh","setup.sh", "/opt/"]
 
 ADD ["https://www.igniterealtime.org/projects/openfire/plugins/1.12.0/restAPI.jar", "/tmp/plugins/restAPI.jar"]
 
-RUN chown -R openfire:openfire /opt/openfire && \
+RUN mkdir /data && \
+    chown -R openfire:openfire /opt/openfire && \
     chown -R openfire:openfire /tmp/plugins && \
+    chown -R openfire:openfire /data && \
     chmod +x /opt/openfire/bin/openfire.sh
 
 USER openfire
