@@ -1,0 +1,2 @@
+# openfire
+openfire container image
