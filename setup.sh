@@ -1,9 +1,33 @@
-#!/bin/sh
+#!/bin/bash
 
 domain=${DOMAIN:-"localhost"}
 fqdn=${FQDN:-"localhost"}
 adminemail=${ADMIN_EMAIL:-"admin%40example.com"}
 adminpassword=${ADMIN_PASSWORD:-"admin"}
+dbtype=${DB_TYPE:-'embedded'}
+datasourcemode='embedded'
+
+case "$dbtype" in
+  postgres)
+    datasourcemode='standard'
+    dbpresets=${DB_PRESETS:-"3"}
+    dbdriver=${DB_DRIVER:-"org.postgresql.Driver"}
+    dbserverurlraw=${DB_SERVER_URL:-"jdbc:postgresql://localhost:5432/openfire"}
+    dbserverurl=$(echo -n "$dbserverurlraw" | od -An -tx1 | tr ' ' '\n' | awk 'NF {printf "%%%s", toupper($1)}')
+    dbusername=${DB_USERNAME:-"postgres"}
+    dbpassword=${DB_PASSWORD:-"mysecurepassword"}
+    dbminconnections=${DB_MIN_CONNECTIONS:-"5"}
+    dbmaxconnections=${DB_MAX_CONNECTIONS:-"25"}
+    dbconnectiontimeout=${DB_CONNECTION_TIMEOUT:-"1.0"}
+    ;;
+   mysql|oracle|mssql)
+    #TODO: implement other DB types
+    datasourcemode='standard'
+  ;;
+  *)
+    datasourcemode='embedded'
+    ;;
+esac
 
 restAPIPlugin () {
   if [ ! -f /data/plugins/restAPI.jar ]; then
@@ -12,6 +36,7 @@ restAPIPlugin () {
 }
 
 setupHeader () {
+  CSRF=''
   header=$(curl -Is 'http://localhost:9090/setup/index.jsp')
   JSESSIONID=$(echo "$header" | grep -iE '^Set-Cookie: JSESSIONID=' | sed 's/.*JSESSIONID=\([^;]*\).*/\1/')
 }
@@ -40,7 +65,12 @@ runSetup () {
 
   runCurlGet "http://localhost:9090/setup/setup-datasource-settings.jsp"
 
-  runCurlGet "http://localhost:9090/setup/setup-datasource-settings.jsp?csrf=$CSRF&next=true&mode=embedded&continue=Continue"
+  runCurlGet "http://localhost:9090/setup/setup-datasource-settings.jsp?csrf=$CSRF&next=true&mode=$datasourcemode&continue=Continue"
+
+  if [ "$datasourcemode" = 'standard' ]; then
+    runCurlGet "http://localhost:9090/setup/setup-datasource-standard.jsp"
+    runCurlPost "http://localhost:9090/setup/setup-datasource-standard.jsp" "csrf=${CSRF}&presets=${dbpresets}&driver=${dbdriver}&serverURL=${dbserverurl}&username=${dbusername}&password=${dbpassword}&minConnections=${dbminconnections}&maxConnections=${dbmaxconnections}&connectionTimeout=${dbconnectiontimeout}&continue=Continue"
+  fi
 
   runCurlGet "http://localhost:9090/setup/setup-profile-settings.jsp"
 
