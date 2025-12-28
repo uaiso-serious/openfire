@@ -30,5 +30,5 @@ echo "--- configuring rest api plugin"
 runLogin
 runCurlGet "http://localhost:9090/plugins/restapi/rest-api.jsp"
 runCurlPost "http://localhost:9090/plugins/restapi/rest-api.jsp?save" "enabled=true&authtype=secret&secret=${restApiSecret}&customAuthFilterClassName=&allowedIPs=&loggingEnabled=false"
-runCurlPost "http://192.168.13.5:9090/server-properties.jsp" "csrf=${CSRF}&action=save&key=adminConsole.access.allow-wildcards-in-excludes&value=true&encrypt=false"
+runCurlPost "http://1localhost:9090/server-properties.jsp" "csrf=${CSRF}&action=save&key=adminConsole.access.allow-wildcards-in-excludes&value=true&encrypt=false"
 echo "--- rest api plugin configured"
